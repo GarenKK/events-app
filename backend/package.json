@@ -1,0 +1,27 @@
+{
+  "name": "events-backend",
+  "version": "1.0.0",
+  "description": "api for user login and event management",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GarenKK/events-app.git"
+  },
+  "keywords": [
+    "authentication"
+  ],
+  "author": "Garen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GarenKK/events-app/issues"
+  },
+  "homepage": "https://github.com/GarenKK/events-app#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "ip": "^1.1.5"
+  }
+}
