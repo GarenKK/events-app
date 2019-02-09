@@ -10,7 +10,9 @@ conf.server = {
 
 conf.nano = {
 	url: "http://" + ip.address() + ":5984",
-	db: "events"
+	db: "events",
+    user: process.env.COUCH_USER,
+    pass: process.env.COUCH_PASS
 };
 
 conf.build = {
