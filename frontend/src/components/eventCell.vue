@@ -5,7 +5,7 @@
       class="image-container">
       <img
         class="image"
-        :src="imageSrc">
+        :src="eventImageSrc">
     </div>
     <div
       class="title">{{ title }}</div>
@@ -21,19 +21,11 @@
     ],
     data () {
       return {
-        title: 'Event Title',
-        imageSrc: 'wow.jpg'
-      }
-    },
-    methods: {
-      imagePath: function (src) {
-        // only useful when obtaining images from assets folder and dynamically binding to img src
-        return require('@/assets/' + src)
+        title: 'Event cell Title'
       }
     },
     created () {
       this.title = this.eventTitle ? this.eventTitle : this.title
-      this.imageSrc = this.eventImageSrc ? this.eventImageSrc : this.imagePath(this.imageSrc)
     }
   }
 </script>
@@ -43,6 +35,12 @@
     display: inline-block;
     width: 20rem;
     cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .event-cell:hover {
+    transform: translateY(-3%);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   .image-container {
@@ -59,7 +57,7 @@
 
   .title {
     padding: 0.5rem 0.5rem 0rem 0.5rem;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

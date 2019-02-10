@@ -2,11 +2,9 @@
   <div
     class="header">
     <router-link
+      class="logo"
       to="/">
-      <div
-        class="logo">
-        EVENTS
-      </div>
+      <div>EVENTS</div>
     </router-link>
   </div>
 </template>
@@ -21,13 +19,13 @@
   .header {
     display: flex;
     justify-content: center;
-    height: 3rem;
+    height: 4rem;
   }
 
   .logo {
     display: flex;
     align-items: center;
     font-size: 2rem;
-    color: black;
+    color: white;
   }
 </style>
