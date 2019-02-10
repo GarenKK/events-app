@@ -1,5 +1,6 @@
 require('dotenv').config();
-var ip = require('ip');
+var ip = require('ip'),
+	hash = require('salted-md5');
 
 var conf = {};
 
@@ -22,5 +23,9 @@ conf.build = {
 };
 
 conf.secret = process.env.SECRET || 'your_jwt_secret';
+
+conf.hashPassword = function (data) {
+	return saltedMd5(data, data.substring(0,1));
+};
 
 module.exports = conf;

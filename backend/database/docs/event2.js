@@ -3,7 +3,8 @@ module.exports = {
 	owner: "sample_user",
 	title: "example event",
 	description: "this is an example event",
-	event_type: "sports",
+	event_type: "entertainment",
 	date: 1554815326,
-	image_id: 2
+	image_id: 2,
+	participants: []
 };

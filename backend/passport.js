@@ -8,7 +8,7 @@ var passport = require('passport'),
 
 passport.use(new LocalStrategy(function (username, password, cb) {
     return user.get(username).then((body) => {
-        if (body && body.rows && body.rows.length && body.rows[0].doc.password === password) {
+        if (body && body.rows && body.rows.length && body.rows[0].doc.password === conf.hashPassword(password)) {
         	delete body.rows[0].doc.password;
             return cb(null, body.rows[0].doc, {message: 'Logged In Successfully'});
         } else {
