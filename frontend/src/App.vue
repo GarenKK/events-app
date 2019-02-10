@@ -21,7 +21,7 @@ export default {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
 
   .router-view {
