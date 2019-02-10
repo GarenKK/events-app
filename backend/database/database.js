@@ -68,6 +68,16 @@ database.insert = function (body, id) {
     });
 };
 
+database.destroy = function (id, rev) {
+    return db.destroy(id, rev, function (err, body, headers) {
+        if (headers && headers['set-cookie']) {
+            clearInterval(interval);
+            setCookie(headers['set-cookie'][0]);
+            interval = setInterval(authorize, timeout);
+        }
+    });
+};
+
 database.init = function() {
     authorize();
     if (interval) {

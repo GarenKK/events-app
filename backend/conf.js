@@ -1,6 +1,6 @@
 require('dotenv').config();
 var ip = require('ip'),
-	hash = require('salted-md5');
+	saltedMd5 = require('salted-md5');
 
 var conf = {};
 

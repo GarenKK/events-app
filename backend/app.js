@@ -7,6 +7,7 @@ var bodyParser = require('body-parser'),
     passport = require('passport'),
     db = require('./database/database.js'),
     user = require('./user.js'),
+    events = require('./events.js'),
     conf = require('./conf.js');
 
 require('./passport');
@@ -34,10 +35,26 @@ server.get('/', function (req, res) {
     res.send('Events api server is running!');
 });
 
+server.post('/login', user.login);
 // user
 var user_uri = '/user';
-server.post(user_uri + '/login', user.login);
-server.get(user_uri + '/events', passport.authenticate('jwt', {session: false}), user.events);
+//server.get(user_uri + '/events', passport.authenticate('jwt', {session: false}), user.events);
+server.use(user_uri + "*", passport.authenticate('jwt', {session: false}));
+server.get(user_uri + '/events', user.events);
+server.post(user_uri + '/join', user.join);
+server.put(user_uri + '/create', user.create);
+server.put(user_uri + '/:id', user.edit);
+server.delete(user_uri + '/:id', user.delete);
+
+// events
+var events_uri = '/events';
+server.get(events_uri + '/all', events.getAll);
+server.get(events_uri + '/:id', events.getEvent);
+
+// bad request
+server.all('*', function (req, res) {
+    res.status(400).json({message: 'Bad Request'});
+})
 
 server.listen(conf.server.port, function () {
     db.init();
