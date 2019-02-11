@@ -37,7 +37,7 @@
     },
     computed: {
       loginState () {
-        return this.$store.getters["getLoginState"]
+        return this.$store.getters.getLoginState
       }
     },
     methods: {

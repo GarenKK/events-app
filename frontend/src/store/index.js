@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios';
+import VueSession from 'vue-session'
 
 Vue.use(Vuex)
 
@@ -47,15 +48,24 @@ const store = new Vuex.Store({
   },
   actions: {
     async LOGIN (context, params) {
-      if (!params || !params.username || !params.password) {
+      context.commit('SET_LOGIN_STATE', "loading")
+      let config
+      if (params && params.token) {
+        config = {
+          headers: {
+            "Authorization": params.token
+          }
+        }
+        params = {}
+      } else if (params && params.username && params.password) {
+        config = {}
+      } else {
         context.commit('SET_LOGIN_STATE', "empty")
         return
       }
-      context.commit('SET_LOGIN_STATE', "loading")
-      let response = await axios.post(URI.base + URI.login, params)
+      let response = await axios.post(URI.base + URI.login, params, config)
       try {
         if (response.data.error || !response.data.user || !response.data.token) {
-          console.log(response)
           context.commit('SET_LOGIN_STATE', "fail")
         } else {
           context.commit('SET_USER', response.data.user)
@@ -161,6 +171,8 @@ const store = new Vuex.Store({
     },
     async GET_ALL_EVENTS (context) {
       let events = []
+      let by_type = []
+      let key
       let config = {
         headers: {
           "Authorization": context.state.token
@@ -168,17 +180,26 @@ const store = new Vuex.Store({
       }
       let response = await axios.get(URI.base + URI.all_events, config)
       try {
-        if (response.error || !response.rows) {
-          console.log(response.error)
+        if (response.data.error || !response.data.rows) {
+          console.log(response.data.error)
         } else {
-          events = response.rows.map(function (row) {
-            return row.doc
-          })
+          for (key in response.data.rows) {
+            if (
+              response.data.rows.hasOwnProperty(key)
+              && by_type.length != 0
+              && by_type[0].event_type != response.data.rows[key].doc.event_type
+            ) {
+              events.push({title: by_type[0].event_type, events: by_type.slice()})
+              by_type = []
+            }
+            by_type.push(response.data.rows[key].doc)
+          }
+          events.push({title: by_type[0].event_type, events: by_type.slice()})
         }
       } catch (error) {
         console.log(error)
       }
-      context.commit('SET_USER_EVENTS', events)
+      context.commit('SET_ALL_EVENTS', events)
     },
     async GET_EVENT (context, id) {
       let event = {}
@@ -203,6 +224,9 @@ const store = new Vuex.Store({
   getters: {
     getUser (state) {
       return state.user
+    },
+    getToken (state) {
+      return state.token
     },
     getUserEvents (state) {
       return state.user_events

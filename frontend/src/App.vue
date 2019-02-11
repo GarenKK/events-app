@@ -19,10 +19,27 @@ export default {
     LoginModal
   },
   computed: {
+    userToken () {
+      return this.$store.getters.getToken
+    },
     loginState () {
       return Object.keys(this.$store.getters.getUser).length > 0
     }
-  }
+  },
+  watch: {
+    userToken (newValue) {
+      if (newValue.length > 0) {
+        this.$session.set('token', newValue)
+      }
+    }
+  },
+  beforeCreate: function () {
+    if (this.$session.exists() && this.$session.has("token")) {
+      this.$store.dispatch("LOGIN", {token: this.$session.get("token")})
+    } else {
+      this.$session.start()
+    }
+  },
 }
 </script>
 

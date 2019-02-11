@@ -66,6 +66,7 @@
       },
       logoutClicked: function () {
         this.$store.dispatch("LOGOUT")
+        this.$session.remove("token")
       }
     }
   }
