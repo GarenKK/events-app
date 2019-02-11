@@ -17,7 +17,8 @@ require('./passport');
 var allowCrossDomain = function (req, res, next) {
     var allowedOrigins = [
             'http://localhost:8080',
-            'http://localhost:8081'
+            'http://localhost:8081',
+            'http://3.17.160.138:8081'
         ],
         origin = req.headers.origin;
 
@@ -55,7 +56,11 @@ server.get(events_uri + '/all', events.getAll);
 server.get(events_uri + '/:id', events.getEvent);
 
 // static
-server.use('/static/:id', function (req, res) {
+server.get('/static', function (req, res) {
+    var filePath = path.join(__dirname, "/static");
+    res.send(fs.readdirSync(filePath));
+});
+server.get('/static/:id', function (req, res) {
     var filePath = path.join(__dirname, "/static/" + req.params.id);
     var stat = fs.statSync(filePath);
     res.writeHead(200, {

@@ -5,6 +5,6 @@ module.exports = {
 	description: "this is a sample event",
 	event_type: "seminar",
 	date: 1552136926000,
-	image_id: 1,
+	image_id: "1.png",
 	participants: ["sample_user1", "sample_user2"]
 };

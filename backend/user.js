@@ -46,8 +46,8 @@ user.events = function (req, res) {
 	var params = {
 		include_docs: true,
 		descending: true,
-		startkey: [req.user._id],
-		endkey: [req.user._id, {}]
+		endkey: [req.user._id],
+		startkey: [req.user._id, {}]
 	}
 	db.view('events', 'by_owner', params).then((body) => {
 		return res.json(body);
