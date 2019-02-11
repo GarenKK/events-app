@@ -40,31 +40,39 @@
     name: 'Header',
     data() {
       return {
-        profileName: 'My Profile',
         showProfileOptions: false
       }
     },
+    computed: {
+      profileName () {
+        let name = this.$store.getters.getUser.username
+        if (name) {
+          return name
+        }
+        return 'My Profile'
+      }
+    },
     methods: {
-      profileBtnMouseover: function () {
+      profileBtnMouseover () {
         this.showProfileOptions = true
       },
-      profileBtnMouseleave: function () {
+      profileBtnMouseleave () {
         this.showProfileOptions = false
       },
-      profileBtnClick: function () {
+      profileBtnClick () {
         this.showProfileOptions = !this.showProfileOptions
       },
-      myEventsClicked: function () {
+      myEventsClicked () {
         this.$router.push({
           path: '/my-events'
         })
       },
-      createEventClicked: function () {
+      createEventClicked () {
         this.$router.push({
           path: '/event-creator'
         })
       },
-      logoutClicked: function () {
+      logoutClicked () {
         this.$store.dispatch("LOGOUT")
         this.$session.remove("token")
       }

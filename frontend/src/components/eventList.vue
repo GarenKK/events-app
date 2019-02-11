@@ -8,6 +8,7 @@
       <EventCell
         class="cell"
         v-for="item in items"
+        :eventId="item._id"
         :eventTitle="item.title"
         :eventImageSrc="item.imgSrc"/>
     </div>
@@ -29,7 +30,7 @@
     data () {
       return {
         title: 'Event list Title',
-        items: [0, 1, 2, 3, 4, 5, 6, 7]
+        items: []
       }
     },
     created () {

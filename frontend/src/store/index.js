@@ -24,7 +24,8 @@ const store = new Vuex.Store({
     user_events: [],
     all_events: [],
     event: {},
-    login_state: ""// loading, success, fail, 
+    login_state: "",
+    create_event_state: "" 
   },
   mutations: {
     SET_USER (state, data) {
@@ -44,11 +45,14 @@ const store = new Vuex.Store({
     },
     SET_LOGIN_STATE (state, data) {
       state.login_state = data
+    },
+    SET_CREATE_EVENT_STATE (state, data) {
+      state.create_event_state = data
     }
   },
   actions: {
     async LOGIN (context, params) {
-      context.commit('SET_LOGIN_STATE', "loading")
+      context.commit('SET_LOGIN_STATE', "Loading...")
       let config
       if (params && params.token) {
         config = {
@@ -60,20 +64,20 @@ const store = new Vuex.Store({
       } else if (params && params.username && params.password) {
         config = {}
       } else {
-        context.commit('SET_LOGIN_STATE', "empty")
+        context.commit('SET_LOGIN_STATE', "Please enter your username and password")
         return
       }
       let response = await axios.post(URI.base + URI.login, params, config)
       try {
         if (response.data.error || !response.data.user || !response.data.token) {
-          context.commit('SET_LOGIN_STATE', "fail")
+          context.commit('SET_LOGIN_STATE', "An error has occured please try again")
         } else {
           context.commit('SET_USER', response.data.user)
           context.commit('SET_TOKEN', response.data.token)
-          context.commit('SET_LOGIN_STATE', "success")
+          context.commit('SET_LOGIN_STATE', "Success!")
         }
       } catch (error) {
-        context.commit('SET_LOGIN_STATE', "fail")
+        context.commit('SET_LOGIN_STATE', "Please enter a correct username and password")
       }
     },
     LOGOUT (context) {
@@ -89,10 +93,10 @@ const store = new Vuex.Store({
       }
       let response = await axios.get(URI.base + URI.user_events, config)
       try {
-        if (response.error || !response.rows) {
-          console.log(response.error)
+        if (response.data.error || !response.data.rows) {
+          console.log(response.data.error)
         } else {
-          events = response.rows.map(function (row) {
+          events = response.data.rows.map(function (row) {
             return row.doc
           })
         }
@@ -109,30 +113,39 @@ const store = new Vuex.Store({
       }
       let response = await axios.post(URI.base + URI.join_event, {event_id: id}, config)
       try {
-        if (response.error) {
-          console.log(response.error)
+        if (response.data.error) {
+          console.log(response.data.error)
         } else {
-          console.log(response)
+          console.log(response.data)
         }
       } catch (error) {
         console.log(error)
       }
     },
     async CREATE_EVENT (context, doc) {
+      if (!doc || !doc.title || !doc.event_type || !doc.date || !doc.description) {
+        context.commit('SET_CREATE_EVENT_STATE', "Please complete all the empty fields")
+        return
+      }
+
       let config = {
         headers: {
           "Authorization": context.state.token
         }
       }
+
       let response = await axios.put(URI.base + URI.create_event, {doc}, config)
+      .catch(error => {
+        context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
+      })
       try {
-        if (response.error) {
-          console.log(response.error)
+        if (response.data.error) {
+          context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
         } else {
-          console.log(response)
+          context.commit('SET_CREATE_EVENT_STATE', "Success")
         }
       } catch (error) {
-        console.log(error)
+        context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
       }
     },
     async EDIT_EVENT (context, doc) {
@@ -143,10 +156,10 @@ const store = new Vuex.Store({
       }
       let response = await axios.put(URI.base + URI.edit_event + doc._id, {doc}, config)
       try {
-        if (response.error) {
-          console.log(response.error)
+        if (response.data.error) {
+          console.log(response.data.error)
         } else {
-          console.log(response)
+          console.log(response.data)
         }
       } catch (error) {
         console.log(error)
@@ -160,10 +173,10 @@ const store = new Vuex.Store({
       }
       let response = await axios.delete(URI.base + URI.delete_event + id, config)
       try {
-        if (response.error) {
-          console.log(response.error)
+        if (response.data.error) {
+          console.log(response.data.error)
         } else {
-          console.log(response)
+          console.log(response.data)
         }
       } catch (error) {
         console.log(error)
@@ -210,10 +223,10 @@ const store = new Vuex.Store({
       }
       let response = await axios.get(URI.base + URI.event + id, config)
       try {
-        if (response.error || response.type != "event") {
-          console.log(response.error)
+        if (response.data.error || response.data.type != "event") {
+          console.log(response.data.error)
         } else {
-          event = response
+          event = response.data
         }
       } catch (error) {
         console.log(error)
@@ -239,6 +252,9 @@ const store = new Vuex.Store({
     },
     getLoginState (state) {
       return state.login_state
+    },
+    getCreateEventState (state) {
+      return state.create_event_state
     }
   }
 })

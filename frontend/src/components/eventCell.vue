@@ -17,16 +17,19 @@
   export default {
     name: 'EventCell',
     props: [
+      'eventId',
       'eventTitle',
       'eventImageSrc'
     ],
     data () {
       return {
+        id: '',
         title: 'Event cell Title',
         imageSrc: ''
       }
     },
     created () {
+      this.id = this.eventId ? this.eventId : this.id
       this.title = this.eventTitle ? this.eventTitle : this.title
       this.imageSrc = this.eventImageSrc ? this.eventImageSrc : this.imageSrc
     },
@@ -34,7 +37,7 @@
       eventCellClicked: function () {
         this.$router.push({
           // replace this.title with the event ID
-          path: `/event-info/${this.title}`
+          path: `/event-info/${this.id}`
         })
       }
     }

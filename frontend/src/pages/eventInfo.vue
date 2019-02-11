@@ -22,12 +22,13 @@
     <div
       class="participants">
       <div
-        class="participants-title">&#8594 Participating Users</div>
+        class="participants-title">&#8594; Participating Users</div>
       <div
         class="list">
         <div
           class="participant"
-          v-for="p in participants">Participant {{ p }}</div>
+          v-for="(p, i) in participants"
+          :key="i">{{ p.username }}</div>
       </div>
     </div>
     <div
@@ -41,12 +42,12 @@
     data () {
       return {
         owner: true,
-        type: 'Event Type',
-        description: 'This is an event that is super awesome and that you definitely should not miss out! Do the right thing and join now!',
+        title: '---',
+        type: '---',
+        date: '---',
+        description: '---',
         imageSrc: '',
-        date: 'March 01 2019',
-        title: 'Event Title',
-        participants: [0, 1, 2, 3, 4, 5]
+        participants: []
       }
     },
     methods: {
@@ -59,6 +60,30 @@
         } else {
           // write register code here
         }
+      }
+    },
+    created () {
+      this.$store.dispatch('GET_EVENT', this.$route.params.id)
+    },
+    computed: {
+      eventInfo () {
+        return this.$store.getters.getEvent
+      },
+      user () {
+        return this.$store.getters.getUser
+      }
+    },
+    watch: {
+      eventInfo: function () {
+        const info = this.eventInfo
+        
+        this.owner = info.owner === this.user._id
+
+        this.title = info.title ? info.title : this.title
+        this.type = info.event_type ? info.event_type : this.type
+        this.date = info.date ? this.dateFormatter(info.date) : this.date
+        this.description = info.description ? info.description : this.description
+        this.participants = info.participants ? info.participants : this.participants
       }
     }
   }

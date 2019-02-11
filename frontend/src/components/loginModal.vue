@@ -8,14 +8,17 @@
       <div
         class="input-title">Username</div>
       <input
-        v-model="username">
+        v-model="username"
+        @keyup="inputKeyUp">
       <div
         class="input-title">Password</div>
       <input
         type="password"
-        v-model="password">
+        v-model="password"
+        @keyup="inputKeyUp">
       <div
-        style="color: red;">{{ loginState }}</div>
+        :style="{ opacity: loginState ? 1 : 0 }"
+        class="status">{{ loginState ? loginState : '---' }}</div>
       <div
         class="login-btn"
         @click="login()">Login</div>
@@ -42,13 +45,20 @@
     },
     methods: {
       login () {
-        console.log("login")
-        this.$store.dispatch("LOGIN", {username: this.username, password: this.password})
+        this.$store.dispatch("LOGIN", {
+          username: this.username,
+          password: this.password
+        })
+      },
+      inputKeyUp (e) {
+        if (e.keyCode === 13) {
+          this.login()
+        }
       }
     },
     destroyed () {
       this.$store.commit('SET_LOGIN_STATE', "")
-    },
+    }
   }
 </script>
 
@@ -97,7 +107,7 @@
     display: inline-block;
     text-align: center;
     width: 35%;
-    margin-top: 2rem;
+    margin-top: 0.5rem;
     padding: 0.5rem 0rem;
     background-color: gray;
     cursor: pointer;
@@ -108,10 +118,15 @@
     background-color: darkgray;
   }
 
+  .status {
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+
   @media screen and (min-width: 960px) {
     .box {
-      width: 35%;
-      height: 35%;
+      width: 45%;
+      height: 45%;
     }
   }
 </style>
