@@ -3,15 +3,20 @@
     <Header/>
     <router-view
       class="router-view"/>
+    <LoginModal
+      v-if="true"/>
   </div>
 </template>
 
 <script>
 import Header from '@/components/header'
+import LoginModal from '@/components/loginModal'
+
 export default {
   name: 'app',
   components: {
-    Header
+    Header,
+    LoginModal
   }
 }
 </script>

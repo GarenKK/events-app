@@ -31,7 +31,8 @@
       </div>
     </div>
     <div
-      class="action-btn">{{ owner ? 'Edit' : 'Register' }}</div>
+      class="action-btn"
+      @click="actionBtnClicked()">{{ owner ? 'Edit' : 'Register' }}</div>
   </div>
 </template>
 
@@ -46,6 +47,18 @@
         date: 'March 01 2019',
         title: 'Event Title',
         participants: [0, 1, 2, 3, 4, 5]
+      }
+    },
+    methods: {
+      actionBtnClicked: function() {
+        const id = this.$route.params.id
+        if (this.owner) {
+          this.$router.push({
+            path: `/event-creator/${id}`
+          })
+        } else {
+          // write register code here
+        }
       }
     }
   }

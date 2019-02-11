@@ -1,6 +1,7 @@
 <template>
   <div
-    class="event-cell">
+    class="event-cell"
+    @click="eventCellClicked()">
     <div
       class="image-container">
       <img
@@ -28,6 +29,14 @@
     created () {
       this.title = this.eventTitle ? this.eventTitle : this.title
       this.imageSrc = this.eventImageSrc ? this.eventImageSrc : this.imageSrc
+    },
+    methods: {
+      eventCellClicked: function () {
+        this.$router.push({
+          // replace this.title with the event ID
+          path: `/event-info/${this.title}`
+        })
+      }
     }
   }
 </script>

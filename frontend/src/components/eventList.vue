@@ -33,7 +33,7 @@
       }
     },
     created () {
-      this.title = this.eventTitle ? this.eventTitle : this.title
+      this.title = this.listTitle ? this.listTitle : this.title
       this.items = this.listItems ? this.listItems : this.items
     }
   }

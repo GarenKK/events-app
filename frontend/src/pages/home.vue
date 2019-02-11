@@ -24,7 +24,7 @@
 
 <style scoped>
   .text {
-    padding: 0rem 1rem 3rem 1rem;
+    padding-bottom: 3rem;
     font-size: 1.8rem;
   }
 </style>
