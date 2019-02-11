@@ -26,6 +26,6 @@ passport.use(new JWTStrategy(
 		if (jwtPayload && jwtPayload.username) {
 			return cb(null, jwtPayload);
 		}
-		return cb(null, false, {message: "Bad token"});
+		return cb({message: "Bad token"});
 	}
 ));

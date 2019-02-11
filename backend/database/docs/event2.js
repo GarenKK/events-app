@@ -4,7 +4,7 @@ module.exports = {
 	title: "example event",
 	description: "this is an example event",
 	event_type: "entertainment",
-	date: 1554815326,
+	date: 1554815326000,
 	image_id: 2,
 	participants: []
 };

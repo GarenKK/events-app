@@ -8,7 +8,7 @@ var conf = require('./conf.js'),
 	events = {};
 
 events.getAll = function (req, res) {
-	db.view('events', 'by_type', {include_docs: true}).then((body) => {
+	db.view('events', 'by_type', {include_docs: true, descending: true}).then((body) => {
 		passport.authenticate('jwt', {session: false}, (err, user, info) => {
 		    if (user && user._id) {
 		    	body.rows = body.rows.filter(function(row) {
@@ -39,7 +39,7 @@ events.getEvent = function (req, res) {
 		db.view('events', 'participants', {key: req.params.id, include_docs: true}).then((body) => {
 			if (body.rows && body.rows.length) {
 				doc.participants = body.rows.map(function (row) {
-					return row.doc;
+					return {username: row.doc.username};
 				});
 				return res.json(doc);
 			}
