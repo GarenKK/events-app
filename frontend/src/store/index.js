@@ -6,7 +6,7 @@ import VueSession from 'vue-session'
 Vue.use(Vuex)
 
 const URI = {
-  base: "http://localhost:8080",
+  base: "http://3.17.160.138:8080",
   login: "/login",
   user_events: "/user/events",
   join_event: "/user/join",
@@ -14,7 +14,8 @@ const URI = {
   edit_event: "/user/",
   delete_event: "/user/",
   all_events: "/events/all",
-  event: "/events/"
+  event: "/events/",
+  static: "/static"
 }
 
 const store = new Vuex.Store({
@@ -25,7 +26,8 @@ const store = new Vuex.Store({
     all_events: [],
     event: {},
     login_state: "",
-    create_event_state: "" 
+    event_state: "",
+    static: []
   },
   mutations: {
     SET_USER (state, data) {
@@ -46,8 +48,12 @@ const store = new Vuex.Store({
     SET_LOGIN_STATE (state, data) {
       state.login_state = data
     },
-    SET_CREATE_EVENT_STATE (state, data) {
-      state.create_event_state = data
+    SET_EVENT_STATE (state, data) {
+      state.event_state = data
+    },
+    SET_STATIC (state, data) {
+      console.log(data);
+      state.static = data
     }
   },
   actions: {
@@ -111,20 +117,27 @@ const store = new Vuex.Store({
           "Authorization": context.state.token
         }
       }
+      const errorMsg = 'An error has occured please try again'
       let response = await axios.post(URI.base + URI.join_event, {event_id: id}, config)
+      .catch(error => {
+        context.commit('SET_EVENT_STATE', errorMsg)
+      })
       try {
         if (response.data.error) {
-          console.log(response.data.error)
+          context.commit('SET_EVENT_STATE', errorMsg)
+        } else if (response.data.success) {
+          context.commit('SET_EVENT_STATE', "Success")
         } else {
-          console.log(response.data)
+          console.log(response)
+          context.commit('SET_EVENT_STATE', "Already joined")
         }
       } catch (error) {
-        console.log(error)
+        context.commit('SET_EVENT_STATE', errorMsg)
       }
     },
     async CREATE_EVENT (context, doc) {
       if (!doc || !doc.title || !doc.event_type || !doc.date || !doc.description) {
-        context.commit('SET_CREATE_EVENT_STATE', "Please complete all the empty fields")
+        context.commit('SET_EVENT_STATE', "Please complete all the empty fields")
         return
       }
 
@@ -133,36 +146,44 @@ const store = new Vuex.Store({
           "Authorization": context.state.token
         }
       }
-
+      const errorMsg = 'An error has occured please try again'
       let response = await axios.put(URI.base + URI.create_event, {doc}, config)
       .catch(error => {
-        context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
+        context.commit('SET_EVENT_STATE', errorMsg)
       })
       try {
         if (response.data.error) {
-          context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
+          context.commit('SET_EVENT_STATE', errorMsg)
         } else {
-          context.commit('SET_CREATE_EVENT_STATE', "Success")
+          context.commit('SET_EVENT_STATE', "Success")
         }
       } catch (error) {
-        context.commit('SET_CREATE_EVENT_STATE', "An error has occured please try again")
+        context.commit('SET_EVENT_STATE', errorMsg)
       }
     },
     async EDIT_EVENT (context, doc) {
+      if (!doc || !doc.title || !doc.event_type || !doc.date || !doc.description) {
+        context.commit('SET_EVENT_STATE', "Please complete all the empty fields")
+        return
+      }
       let config = {
         headers: {
           "Authorization": context.state.token
         }
       }
+      const errorMsg = 'An error has occured please try again'
       let response = await axios.put(URI.base + URI.edit_event + doc._id, {doc}, config)
+      .catch(error => {
+        context.commit('SET_EVENT_STATE', errorMsg)
+      })
       try {
         if (response.data.error) {
-          console.log(response.data.error)
+          context.commit('SET_EVENT_STATE', errorMsg)
         } else {
-          console.log(response.data)
+          context.commit('SET_EVENT_STATE', "Success")
         }
       } catch (error) {
-        console.log(error)
+        context.commit('SET_EVENT_STATE', errorMsg)
       }
     },
     async DELETE_EVENT (context, id) {
@@ -171,15 +192,19 @@ const store = new Vuex.Store({
           "Authorization": context.state.token
         }
       }
+      const errorMsg = 'An error has occured please try again'
       let response = await axios.delete(URI.base + URI.delete_event + id, config)
+      .catch(error => {
+        context.commit('SET_EVENT_STATE', errorMsg)
+      })
       try {
         if (response.data.error) {
-          console.log(response.data.error)
+          context.commit('SET_EVENT_STATE', errorMsg)
         } else {
-          console.log(response.data)
+          context.commit('SET_EVENT_STATE', "Success")
         }
       } catch (error) {
-        console.log(error)
+        context.commit('SET_EVENT_STATE', errorMsg)
       }
     },
     async GET_ALL_EVENTS (context) {
@@ -232,6 +257,14 @@ const store = new Vuex.Store({
         console.log(error)
       }
       context.commit('SET_EVENT', event)
+    },
+    async GET_STATIC (context) {
+      let response = await axios.get(URI.base + URI.static)
+      try {
+        context.commit('SET_STATIC', response.data)
+      } catch (error) {
+        context.commit('SET_STATIC', [])
+      }
     }
   },
   getters: {
@@ -253,8 +286,16 @@ const store = new Vuex.Store({
     getLoginState (state) {
       return state.login_state
     },
-    getCreateEventState (state) {
-      return state.create_event_state
+    getEventState (state) {
+      return state.event_state
+    },
+    getStatic (state) {
+      return state.static
+    },
+    getImageUrl (state) {
+      return name => {
+        return URI.base + URI.static + "/" + name
+      };
     }
   }
 })

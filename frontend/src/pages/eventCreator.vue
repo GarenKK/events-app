@@ -24,14 +24,15 @@
     <div
       class="title">&#8594; Image</div>
     <img
-      v-for="i in 15"
+      v-for="i in staticNames"
       :key="i"
       class="image"
       :class="{ 'selected': i === selectedImage }"
+      :src="imageUrl(i)"
       @click="imageClicked(i)">
     <div
-      :style="{ opacity: createEventState ? 1 : 0 }"
-      class="status">{{ createEventState ? createEventState : '---' }}</div>
+      :style="{ opacity: eventState ? 1 : 0 }"
+      class="status">{{ eventState ? eventState : '---' }}</div>
     <div
       class="action-btn"
       @click="actionBtnClicked()">{{ mode === 'create' ? 'Create' : 'Save' }}</div>
@@ -47,6 +48,8 @@
     },
     data() {
       return {
+        docId: null,
+        docRev: null,
         title: '',
         type: '',
         date: '',
@@ -60,13 +63,27 @@
       imageClicked: function(i) {
         this.selectedImage = i
       },
+      imageUrl: function (name) {
+        return this.$store.getters.getImageUrl(name)
+      },
       actionBtnClicked: function() {
         if (this.mode === 'create') {
           this.$store.dispatch('CREATE_EVENT', {
             title: this.title,
             event_type: this.type,
-            date: this.date ? this.date.getTime() : this.date,
-            description: this.description
+            date: this.date && typeof this.date === "object" ? this.date.getTime() : this.date,
+            description: this.description,
+            image_id: this.selectedImage
+          })
+        } else {
+          this.$store.dispatch('EDIT_EVENT', {
+            _id: this.docId,
+            _rev: this.docRev,
+            title: this.title,
+            event_type: this.type,
+            date: this.date && typeof this.date === "object" ? this.date.getTime() : this.date,
+            description: this.description,
+            image_id: this.selectedImage
           })
         }
       }
@@ -80,27 +97,37 @@
       this.disabledDates = {
         to: new Date()
       }
+
+      this.$store.dispatch('GET_STATIC')
     },
     computed: {
       eventInfo () {
         return this.$store.getters.getEvent
       },
-      createEventState () {
-        return this.$store.getters.getCreateEventState
+      eventState () {
+        return this.$store.getters.getEventState
+      },
+      staticNames () {
+        return this.$store.getters.getStatic
       }
     },
     watch: {
       eventInfo: function () {
         const info = this.eventInfo
 
+        this.docId = info._id
+        this.docRev = info._rev
+
         this.title = info.title ? info.title : this.title
         this.type = info.event_type ? info.event_type : this.type
-        this.date = info.date ? info.date * 1000 : this.date
+        this.date = info.date ? info.date : this.date
         this.description = info.description ? info.description : this.description
         this.participants = info.participants ? info.participants : this.participants
+        this.imageId = info.image_id ? info.image_id : this.imageId
+        this.selectedImage = this.imageId
       },
-      createEventState: function () {
-        if (this.createEventState === 'Success') {
+      eventState () {
+        if (this.eventState === 'Success') {
           this.$router.push({
             path: '/'
           })
@@ -108,7 +135,7 @@
       }
     },
     destroyed () {
-      this.$store.commit('SET_CREATE_EVENT_STATE', '')
+      this.$store.commit('SET_EVENT_STATE', '')
     }
   }
 </script>

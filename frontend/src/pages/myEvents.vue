@@ -22,6 +22,9 @@
       userEvents () {
         return this.$store.getters.getUserEvents
       }
+    },
+    destroyed () {
+      this.$store.commit('SET_USER_EVENTS', [])
     }
   }
 </script>

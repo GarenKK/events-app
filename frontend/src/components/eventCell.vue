@@ -6,7 +6,7 @@
       class="image-container">
       <img
         class="image"
-        :src="imageSrc">
+        :src="imageUrl(imageId)">
     </div>
     <div
       class="title">{{ title }}</div>
@@ -19,21 +19,24 @@
     props: [
       'eventId',
       'eventTitle',
-      'eventImageSrc'
+      'eventImageId'
     ],
     data () {
       return {
         id: '',
         title: 'Event cell Title',
-        imageSrc: ''
+        imageId: ''
       }
     },
     created () {
       this.id = this.eventId ? this.eventId : this.id
       this.title = this.eventTitle ? this.eventTitle : this.title
-      this.imageSrc = this.eventImageSrc ? this.eventImageSrc : this.imageSrc
+      this.imageId = this.eventImageId ? this.eventImageId : this.imageId
     },
     methods: {
+      imageUrl: function (name) {
+        return this.$store.getters.getImageUrl(name)
+      },
       eventCellClicked: function () {
         this.$router.push({
           // replace this.title with the event ID
@@ -47,7 +50,7 @@
 <style scoped>
   .event-cell {
     display: inline-block;
-    width: 20rem;
+    width: 17rem;
     cursor: pointer;
     transition: all 0.3s;
   }

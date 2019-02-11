@@ -10,7 +10,7 @@
         v-for="item in items"
         :eventId="item._id"
         :eventTitle="item.title"
-        :eventImageSrc="item.imgSrc"/>
+        :eventImageId="item.image_id"/>
     </div>
   </div>
 </template>

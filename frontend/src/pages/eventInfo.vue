@@ -7,7 +7,7 @@
         class="image-container">
         <img
           class="image"
-          :src="eventImageSrc">
+          :src="imageUrl(imageId)">
       </div>
       <div
         class="text-container">
@@ -32,8 +32,15 @@
       </div>
     </div>
     <div
+      :style="{ opacity: eventState ? 1 : 0 }"
+      class="status">{{ eventState ? eventState : '---' }}</div>
+    <div
       class="action-btn"
       @click="actionBtnClicked()">{{ owner ? 'Edit' : 'Register' }}</div>
+    <div
+      v-if="owner"
+      class="delete-btn"
+      @click="deleteBtnClicked()">Delete Event</div>
   </div>
 </template>
 
@@ -46,11 +53,14 @@
         type: '---',
         date: '---',
         description: '---',
-        imageSrc: '',
+        imageId: '',
         participants: []
       }
     },
     methods: {
+      imageUrl: function (name) {
+        return this.$store.getters.getImageUrl(name)
+      },
       actionBtnClicked: function() {
         const id = this.$route.params.id
         if (this.owner) {
@@ -59,7 +69,11 @@
           })
         } else {
           // write register code here
+          this.$store.dispatch('JOIN_EVENT', id)
         }
+      },
+      deleteBtnClicked: function() {
+        this.$store.dispatch('DELETE_EVENT', this.$route.params.id)
       }
     },
     created () {
@@ -71,6 +85,9 @@
       },
       user () {
         return this.$store.getters.getUser
+      },
+      eventState () {
+        return this.$store.getters.getEventState
       }
     },
     watch: {
@@ -84,7 +101,19 @@
         this.date = info.date ? this.dateFormatter(info.date) : this.date
         this.description = info.description ? info.description : this.description
         this.participants = info.participants ? info.participants : this.participants
+        this.imageId = info.image_id ? info.image_id : this.imageId
+      },
+      eventState: function () {
+        if (this.eventState === 'Success') {
+          this.$router.push({
+            path: '/'
+          })
+        }
       }
+    },
+    destroyed () {
+      this.$store.commit('SET_EVENT_STATE', '')
+      this.$store.commit('SET_EVENT', {})
     }
   }
 </script>
@@ -94,8 +123,8 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    width: 100%;
-    height: 16rem;
+    width: 60vw;
+    height: 60vw;
     background-color: gray;
   }
 
@@ -143,10 +172,16 @@
     color: black;
   }
 
+  .status {
+    margin-top: 1rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
   .action-btn {
     padding: 0.75rem;
     margin: auto;
-    margin-top: 3rem;
+    margin-top: 1rem;
     border-radius: 3px;
     text-align: center;
     font-size: 1.25rem;
@@ -158,6 +193,13 @@
 
   .action-btn:hover {
     background-color: lightblue;
+  }
+
+  .delete-btn {
+    margin-top: 1rem;
+    text-decoration: underline;
+    text-align: center;
+    cursor: pointer;
   }
 
   @media screen and (min-width: 580px) {
@@ -173,7 +215,8 @@
     }
 
     .image-container {
-      width: 32rem;
+      width: 24rem;
+      height: 24rem;
     }
 
     .text-container {
