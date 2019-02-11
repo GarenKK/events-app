@@ -2,6 +2,7 @@
   <div id="app">
     <Header/>
     <router-view
+      v-if="loginState"
       class="router-view"/>
     <LoginModal
       v-if="!loginState"/>

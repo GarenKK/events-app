@@ -28,7 +28,6 @@
         return this.$store.getters.getUser
       },
       allEvents () {
-        console.log(this.$store.getters.getAllEvents)
         return this.$store.getters.getAllEvents
       }
     },

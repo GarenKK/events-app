@@ -52,7 +52,6 @@ const store = new Vuex.Store({
       state.event_state = data
     },
     SET_STATIC (state, data) {
-      console.log(data);
       state.static = data
     }
   },
@@ -128,7 +127,6 @@ const store = new Vuex.Store({
         } else if (response.data.success) {
           context.commit('SET_EVENT_STATE', "Success")
         } else {
-          console.log(response)
           context.commit('SET_EVENT_STATE', "Already joined")
         }
       } catch (error) {
