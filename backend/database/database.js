@@ -39,7 +39,7 @@ resetInterval = function (headers) {
 };
 
 database.view = function (designDoc, viewName, params) {
-    // nano bug doesnt allow db.view to return promise like db.get and db.insert while having callback in some environments
+    // nano bug doesnt allow db.view to return promise while having callback in some environments
     return new Promise(function (resolve, reject) {
         db.view(designDoc, viewName, params, function (err, body, headers) {
             resetInterval(headers);
@@ -53,25 +53,52 @@ database.view = function (designDoc, viewName, params) {
 };
 
 database.get = function (docId) {
-    return db.get(docId, function (err, body, headers) {
-        resetInterval(headers);
+    return new Promise(function (resolve, reject) {
+        db.get(docId, function (err, body, headers) {
+            resetInterval(headers);
+            if (err) {
+                reject(err);
+            } else {
+                resolve(body);
+            }
+        });
     });
 };
 
 database.insert = function (body, id) {
-    if (typeof id === 'string' || id instanceof String) {
-        return db.insert(body, id, function (err, body, headers) {
-            resetInterval(headers);
-        });
-    }
-    return db.insert(body, function (err, body, headers) {
-        resetInterval(headers);
+    return new Promise(function (resolve, reject) {
+        if (typeof id === 'string' || id instanceof String) {
+            db.insert(body, id, function (err, body, headers) {
+                resetInterval(headers);
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(body);
+                }
+            });
+        } else {
+            db.insert(body, function (err, body, headers) {
+                resetInterval(headers);
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(body);
+                }
+            });
+        }
     });
 };
 
 database.destroy = function (id, rev) {
-    return db.destroy(id, rev, function (err, body, headers) {
-        resetInterval(headers);
+    return new Promise(function (resolve, reject) {
+        db.destroy(id, rev, function (err, body, headers) {
+            resetInterval(headers);
+            if (err) {
+                reject(err);
+            } else {
+                resolve(body);
+            }
+        });
     });
 };
 
