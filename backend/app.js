@@ -14,7 +14,7 @@ require('./passport');
 
 var allowCrossDomain = function (req, res, next) {
     var allowedOrigins = [
-            '*'
+            'http://localhost:8081'
         ],
         origin = req.headers.origin;
 
@@ -50,11 +50,6 @@ server.delete(user_uri + '/:id', user.delete);
 var events_uri = '/events';
 server.get(events_uri + '/all', events.getAll);
 server.get(events_uri + '/:id', events.getEvent);
-
-// bad request
-server.all('*', function (req, res) {
-    res.status(400).json({message: 'Bad Request'});
-})
 
 server.listen(conf.server.port, function () {
     db.init();

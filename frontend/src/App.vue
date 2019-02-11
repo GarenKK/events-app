@@ -4,7 +4,7 @@
     <router-view
       class="router-view"/>
     <LoginModal
-      v-if="true"/>
+      v-if="!loginState"/>
   </div>
 </template>
 
@@ -17,11 +17,16 @@ export default {
   components: {
     Header,
     LoginModal
+  },
+  computed: {
+    loginState () {
+      return Object.keys(this.$store.getters.getUser).length > 0
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
   #app {
     display: flex;
     flex-direction: column;

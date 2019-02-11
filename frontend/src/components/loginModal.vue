@@ -7,13 +7,18 @@
         class="text">{{ text }}</div>
       <div
         class="input-title">Username</div>
-      <input>
+      <input
+        v-model="username">
       <div
         class="input-title">Password</div>
       <input
-        type="password">
+        type="password"
+        v-model="password">
       <div
-        class="login-btn">Login</div>
+        style="color: red;">{{ loginState }}</div>
+      <div
+        class="login-btn"
+        @click="login()">Login</div>
     </div>
   </div>
 </template>
@@ -25,9 +30,25 @@
     name: 'LoginModal',
     data () {
       return {
-        text: texts.login
+        text: texts.login,
+        username: "",
+        password: ""
       }
-    }
+    },
+    computed: {
+      loginState () {
+        return this.$store.getters["getLoginState"]
+      }
+    },
+    methods: {
+      login () {
+        console.log("login")
+        this.$store.dispatch("LOGIN", {username: this.username, password: this.password})
+      }
+    },
+    destroyed () {
+      this.$store.commit('SET_LOGIN_STATE', "")
+    },
   }
 </script>
 

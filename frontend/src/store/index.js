@@ -5,7 +5,7 @@ import axios from 'axios';
 Vue.use(Vuex)
 
 const URI = {
-  base: "http://192.168.0.100:8080",
+  base: "http://localhost:8080",
   login: "/login",
   user_events: "/user/events",
   join_event: "/user/join",
@@ -54,16 +54,21 @@ const store = new Vuex.Store({
       context.commit('SET_LOGIN_STATE', "loading")
       let response = await axios.post(URI.base + URI.login, params)
       try {
-        if (response.error || !response.user || !response.token) {
+        if (response.data.error || !response.data.user || !response.data.token) {
+          console.log(response)
           context.commit('SET_LOGIN_STATE', "fail")
         } else {
-          context.commit('SET_USER', response.user)
-          context.commit('SET_TOKEN', response.token)
+          context.commit('SET_USER', response.data.user)
+          context.commit('SET_TOKEN', response.data.token)
           context.commit('SET_LOGIN_STATE', "success")
         }
       } catch (error) {
         context.commit('SET_LOGIN_STATE', "fail")
       }
+    },
+    LOGOUT (context) {
+      context.commit('SET_USER', {})
+      context.commit('SET_TOKEN', "")
     },
     async GET_USER_EVENTS (context) {
       let events = []
@@ -207,6 +212,9 @@ const store = new Vuex.Store({
     },
     getEvent (state) {
       return state.event
+    },
+    getLoginState (state) {
+      return state.login_state
     }
   }
 })

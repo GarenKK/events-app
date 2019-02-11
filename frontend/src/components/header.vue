@@ -27,6 +27,9 @@
         <div
           class="option"
           @click="createEventClicked()">Create Event</div>
+        <div
+          class="option"
+          @click="logoutClicked()">Logout</div>
       </div>
     </div>
   </div>
@@ -60,6 +63,9 @@
         this.$router.push({
           path: '/event-creator'
         })
+      },
+      logoutClicked: function () {
+        this.$store.dispatch("LOGOUT")
       }
     }
   }
