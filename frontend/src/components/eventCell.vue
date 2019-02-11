@@ -5,7 +5,7 @@
       class="image-container">
       <img
         class="image"
-        :src="eventImageSrc">
+        :src="imageSrc">
     </div>
     <div
       class="title">{{ title }}</div>
@@ -21,11 +21,13 @@
     ],
     data () {
       return {
-        title: 'Event cell Title'
+        title: 'Event cell Title',
+        imageSrc: ''
       }
     },
     created () {
       this.title = this.eventTitle ? this.eventTitle : this.title
+      this.imageSrc = this.eventImageSrc ? this.eventImageSrc : this.imageSrc
     }
   }
 </script>

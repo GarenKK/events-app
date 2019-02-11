@@ -21,12 +21,13 @@ export default {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    font-family: Helvetica, Arial, sans-serif;
-    background-color: rgb(24, 24, 24);
-    color: rgb(222, 222, 222);
+    max-width: 100rem;
+    margin: auto;
+    padding: 0rem 2rem;
   }
 
   .router-view {
     flex: 1;
+    padding: 3rem 0rem;
   }
 </style>
