@@ -106,7 +106,8 @@
   }
 
   .logo-img {
-    height: 55%;
+    height: 2.3rem;
+    width: 2.3rem;
     margin: 10px;
   }
 
