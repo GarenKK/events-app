@@ -42,7 +42,12 @@ export default {
       }
     },
     loginStateCHanged (newValue, oldValue) {
-      if (newValue != "Success!") {
+      var state_messages = this.$store.getters.getStateMessages
+      if (
+        newValue === state_messages.login.logout
+        || newValue === state_messages.login.fail
+        || newValue === state_messages.login.error
+      ) {
         this.sessionTokenExists = false
       }
     }
