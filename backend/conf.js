@@ -22,7 +22,10 @@ conf.build = {
     docsPath: './database/docs/'
 };
 
-conf.secret = process.env.SECRET || 'your_jwt_secret';
+conf.token = {
+	secret: process.env.SECRET || 'your_jwt_secret',
+	expiresIn: '1h'
+};
 
 conf.hashPassword = function (data) {
 	return saltedMd5(data, data.substring(0,1));

@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(function (username, password, cb) {
 passport.use(new JWTStrategy(
 	{
 		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-		secretOrKey: conf.secret
+		secretOrKey: conf.token.secret
 	},
 	function (jwtPayload, cb) {
 		if (jwtPayload && jwtPayload.username) {

@@ -20,7 +20,7 @@ user.login = function (req, res) {
 				if (err) {
 					res.send(err);
 				}
-	            const token = "Bearer " + jwt.sign(user, conf.secret);
+	            const token = "Bearer " + jwt.sign(user, conf.token.secret, {expiresIn: conf.token.expiresIn});
 	            return res.json({user, token});
 	        });
 	    })(req, res);
