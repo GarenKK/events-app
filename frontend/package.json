@@ -1,12 +1,26 @@
 {
   "name": "events-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "web app for user login and event management",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GarenKK/events-app.git"
+  },
+  "keywords": [
+    "authentication",
+    "event"
+  ],
+  "author": "Garen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GarenKK/events-app/issues"
+  },
+  "homepage": "https://github.com/GarenKK/events-app#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "vue": "^2.5.22",

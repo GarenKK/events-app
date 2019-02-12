@@ -4,7 +4,12 @@
     <router-link
       class="logo"
       to="/">
-      <div>EVENTS</div>
+      <div class="logo-inner">
+        <img
+          src="@/assets/logo.png"
+          class="logo-img">
+        EVENTS
+      </div>
     </router-link>
     <div
       class="profile-btn"
@@ -90,8 +95,19 @@
   .logo {
     display: flex;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: white;
+  }
+
+  .logo-inner {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .logo-img {
+    height: 55%;
+    margin: 10px;
   }
 
   .profile-btn {

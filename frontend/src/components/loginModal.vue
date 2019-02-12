@@ -88,6 +88,7 @@
   }
 
   .text {
+    display: none;
     margin-bottom: 2rem;
     text-align: center;
     font-size: 1.5rem;
@@ -127,6 +128,12 @@
     .box {
       width: 45%;
       height: 45%;
+    }
+  }
+
+  @media screen and (min-height: 440px) {
+    .text {
+      display: block;
     }
   }
 </style>

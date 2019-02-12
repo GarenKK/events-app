@@ -91,7 +91,11 @@ const store = new Vuex.Store({
     LOGOUT (context) {
       context.commit('SET_USER', {})
       context.commit('SET_TOKEN', "")
-      context.commit('SET_LOGIN_STATE', "Logout")
+      context.commit('SET_USER_EVENTS', [])
+      context.commit('SET_ALL_EVENTS', [])
+      context.commit('SET_EVENT', {})
+      context.commit('SET_LOGIN_STATE', "")
+      context.commit('SET_EVENT_STATE', "")
     },
     async GET_USER_EVENTS (context) {
       let events = []

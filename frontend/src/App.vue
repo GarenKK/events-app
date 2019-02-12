@@ -42,7 +42,7 @@ export default {
       }
     },
     loginStateCHanged (newValue, oldValue) {
-      if (newValue === "Logout") {
+      if (newValue != "Success!") {
         this.sessionTokenExists = false
       }
     }

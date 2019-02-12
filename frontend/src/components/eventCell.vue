@@ -50,7 +50,7 @@
 <style scoped>
   .event-cell {
     display: inline-block;
-    width: 17rem;
+    width: 15rem;
     cursor: pointer;
     transition: all 0.3s;
   }
@@ -64,7 +64,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    height: 17rem;
+    height: 15rem;
     background-color: gray;
   }
 
