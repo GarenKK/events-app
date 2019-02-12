@@ -73,6 +73,9 @@ const store = new Vuex.Store({
         return
       }
       let response = await axios.post(URI.base + URI.login, params, config)
+      .catch(error => {
+        context.commit('SET_LOGIN_STATE', "Please enter a correct username and password")
+      })
       try {
         if (response.data.error || !response.data.user || !response.data.token) {
           context.commit('SET_LOGIN_STATE', "An error has occured please try again")
@@ -88,6 +91,7 @@ const store = new Vuex.Store({
     LOGOUT (context) {
       context.commit('SET_USER', {})
       context.commit('SET_TOKEN', "")
+      context.commit('SET_LOGIN_STATE', "Logout")
     },
     async GET_USER_EVENTS (context) {
       let events = []

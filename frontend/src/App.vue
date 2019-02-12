@@ -5,7 +5,7 @@
       v-if="loginState"
       class="router-view"/>
     <LoginModal
-      v-if="!loginState"/>
+      v-if="!loginState && !sessionTokenExists"/>
   </div>
 </template>
 
@@ -19,18 +19,31 @@ export default {
     Header,
     LoginModal
   },
+  data () {
+    return {
+      sessionTokenExists: false
+    }
+  },
   computed: {
     userToken () {
       return this.$store.getters.getToken
     },
     loginState () {
       return Object.keys(this.$store.getters.getUser).length > 0
+    },
+    loginStateCHanged () {
+     return this.$store.getters.getLoginState
     }
   },
   watch: {
     userToken (newValue) {
       if (newValue.length > 0) {
         this.$session.set('token', newValue)
+      }
+    },
+    loginStateCHanged (newValue, oldValue) {
+      if (newValue === "Logout") {
+        this.sessionTokenExists = false
       }
     }
   },
@@ -41,6 +54,11 @@ export default {
       this.$session.start()
     }
   },
+  mounted: function () {
+    if (this.$session.exists() && this.$session.has("token")) {
+      this.sessionTokenExists = true
+    }
+  }
 }
 </script>
 
